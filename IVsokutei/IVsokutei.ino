@@ -5,6 +5,7 @@
 #define T_VLTG 1.25   //LSB Voltage value [mV]
 #define C_CRNT 0.2    //Current colect value [mA]
 #define C_VLTG 22     //Voltage colect value [mV]
+#define DATASIZE  500
 
 enum{
   M_STNG,
@@ -12,9 +13,13 @@ enum{
   M_VLTG,
 };
 
-boolean g_i = 0;
-float g_crnt[200]={}, g_vltg[200]={};
+boolean g_sw = 0;
+float g_crnt[DATASIZE]={}, g_vltg[DATASIZE]={};
 int g_count = 0;
+unsigned long g_past = 0;
+
+void IV_Print();
+void Calc(float *, unsigned int, float);
 
 void setup()
 {
@@ -41,29 +46,28 @@ void setup()
 
 void loop()
 {
-  unsigned long  l = millis();
-  ((l%=1000) > 500)? g_i = true : g_i=false;
+  unsigned long l = millis();
+  
+  if((l%=1000) >= 500) g_sw = 1;
+  else g_sw = 0;
+
+  if(l-g_past >= 200){
+    IV_Print();
+    g_count=0;
+    g_past = millis();
+  }
   
   
-  
-  Serial.print(g_i);
-  Serial.print(',');
-  digitalWrite(2,g_i);
-  Calc(g_vltg, M_CRNT, T_CRNT);
-  Serial.print(',');
-  Calc(g_crnt, M_VLTG, T_VLTG);
-  Serial.println();
+  digitalWrite(2,g_sw);
+  if(g_count < DATASIZE){
+    Calc(g_crnt, M_CRNT, T_CRNT);
+    Calc(g_vltg, M_VLTG, T_VLTG);
+  }else Serial.println("Data is full.");
   g_count++;
 }
 
-void Calc(float *rcv, unsigned int mode, float trans){
-  int RcvData[2]={};
-
-  if(*rcv == NULL){
-    Serial.println("Rcv allay is full.");
-    return;
-  }
-  
+void Calc(float *p, unsigned int mode, float trans){
+  byte RcvData[2]={};
   Wire.beginTransmission(SLVAD);  //Read data.
   Wire.write(mode);
   Wire.endTransmission();
@@ -72,21 +76,18 @@ void Calc(float *rcv, unsigned int mode, float trans){
   while (Wire.available()){
     RcvData[Wire.available() - 1] = Wire.read();
   }
-  *rcv = RcvData[0] + (RcvData[1] << 8);
-  rcv++;
+  p[g_count] = (float)(RcvData[0] + (RcvData[1] << 8)); 
 }
 
-void ClearData(float *data, int *counter){
+void IV_Print(){
   int i = 0;
-  int len = sizeof(data)/sizeof(float);
-
-  *counter = 0;
-  for(; i<len; i++){
-    data[i] = 0;
+  while(i < g_count){
+    Serial.print(g_sw);
+    Serial.print(',');
+    Serial.print(g_crnt[i]);
+    Serial.print(',');
+    Serial.println(g_vltg[i]);
+    i+=10;
   }
-}
-
-void Print(float *data){
-
 }
 
