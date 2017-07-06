@@ -29,11 +29,12 @@ void ShowData();
 void Seido_Sokutei(int);
 int RasPi_Shake();
 void RC_Seitei(int);
+void SendProcessing();
 
 unsigned long g_past = 0;
 unsigned char g_times = 0;
-int g_crnt[100];
-unsigned int g_vltg[100];
+int g_crnt[200];
+unsigned int g_vltg[200];
 float MPP_tre = 0;
 unsigned char MPP_n = 0;
 boolean level;
@@ -85,7 +86,6 @@ void loop()
       Serial.println("Unknown error.");
   }
   */
-
   /*---単機実験用---*/
   ResetAndShow();
   CalcIVP();
@@ -149,13 +149,14 @@ void CalcIVP(){
     MPP_n = g_times;
   }
   g_times++;
-  delay(5);
+  delay(2);
 }
 
 void ResetAndShow(){
   if((millis()-g_past) > CALC_TIME){
     digitalWrite(2, 1);
     ShowData();
+    //SendProcessing();
     g_times = 0;
     MPP_n = 0;
     MPP_tre = 0;
@@ -176,17 +177,19 @@ void RasPi_ResetAndShow(){
 
 void ShowData(){
   int i;
+  Serial.print("now = ");
+  Serial.println(millis());
   Serial.print("Calc times = ");
   Serial.println(g_times);
   //delay(1000);
   
   for(i = 0; i < g_times; i++){
     Serial.print(i);
-    Serial.print(", ,");
+    Serial.print(',');
     Serial.print((float)g_vltg[i] * T_VLTG);
-    Serial.print(",[mV] ,");
+    Serial.print(',');
     Serial.print((float)g_crnt[i] * T_CRNT);
-    Serial.println(",[mA] ,");
+    Serial.print('\n');
   }
   
     Serial.println("MPPdatas...");
@@ -196,4 +199,28 @@ void ShowData(){
     Serial.println(",[mA] ,");
     
 }
+
+void SendProcessing(){
+  int i;
+
+    //Serial.print('A');
+  
+    //送るデータ回数を送信
+    //Serial.print('T');
+    Serial.print(millis());
+
+    
+    Serial.print(g_times);
+    Serial.print('N');
+  
+  for(i = 0; i < g_times; i++){
+    Serial.print(i);
+    Serial.print(',');
+    Serial.print((float)g_vltg[i] * T_VLTG);
+    Serial.print(',');
+    Serial.print((float)g_crnt[i] * T_CRNT);
+    Serial.print('N');
+  }
+}
+
 
