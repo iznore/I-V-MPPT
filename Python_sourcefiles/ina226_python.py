@@ -3,8 +3,8 @@ import time
 import commands
 
 def GetV():
-?check = commands.getoutput("i2cget -y 1 0x4f 0x02 w")
-?return (int(check[4:6],16)*256+int(check[2:4],16))*1.25/1000
+check = commands.getoutput("i2cget -y 1 0x4f 0x02 w")
+return (int(check[4:6],16)*256+int(check[2:4],16))*1.25/1000
 
 def GetA():
 check = commands.getoutput("i2cget -y 1 0x4f 0x04 w")
