@@ -42,8 +42,11 @@ GPIO.output(5,GPIO.LOW)
 print "LED-off"
 time.sleep(1)
 
+#File out
+f = open('result.csv', 'w')
 for num in range(len(vltg)) :
     print calctime[num] + 's, ' + str(vltg[num]) + " V, " + str(crnt[num])+" mA "
 
+f.close()
 GPIO.cleanup()
 exit
