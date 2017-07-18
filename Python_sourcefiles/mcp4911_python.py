@@ -21,6 +21,7 @@ GPIO.setup(LDAC_PIN, GPIO.OUT)
 GPIO.output(CLK_PIN, False)
 
 def DACout(value):
+    print('digital value = ' + value)
     #LDAC CS start up
     GPIO.output(LDAC_PIN, True)
     GPIO.output(CS_PIN, False)
@@ -41,21 +42,25 @@ def DACout(value):
     GPIO.output(CLK_PIN, True)
     GPIO.output(CLK_PIN, False)
     #DAC Databits output
-    for i in range(10)
-        if ((value >> i) & 0x1) == 1
+    for i in range(10):
+        if ((value >> i) & 0x1) == 1:
             GPIO.output(SDI_PIN, True)
         else:
             GPIO.output(SDI_PIN, False)
         GPIO.output(CLK_PIN, True)
         GPIO.output(CLK_PIN, False)
+    GPIO.output(CLK_PIN, True)
+    GPIO.output(CLK_PIN, False)
+    GPIO.output(CLK_PIN, True)
+    GPIO.output(CLK_PIN, False)
     #output
     GPIO.output(LDAC_PIN, False)
     GPIO.output(CS_PIN, True)
     return
 
-outvltg = 2.5
-outvltg = int(outvltg * 4095 / 5)
-DACout(outvltg)
+vltg = 2.5
+outvltg =  vltg * 1023 / 5
+DACout(int(outvltg))
 time.sleep(5)
 
 GPIO.cleanup()
