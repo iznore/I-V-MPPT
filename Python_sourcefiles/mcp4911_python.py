@@ -21,7 +21,7 @@ GPIO.setup(LDAC_PIN, GPIO.OUT)
 GPIO.output(CLK_PIN, False)
 
 def DACout(value):
-    print('digital value = ' + value)
+    print('digital value = ' + str(value))
     #LDAC CS start up
     GPIO.output(LDAC_PIN, True)
     GPIO.output(CS_PIN, False)
