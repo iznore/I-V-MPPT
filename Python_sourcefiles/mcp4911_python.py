@@ -58,9 +58,9 @@ def DACout(value):
     GPIO.output(CS_PIN, True)
     return
 
-vltg = 2.5
-outvltg =  vltg * 1023 / 5
-DACout(int(outvltg))
-time.sleep(5)
+for j in range(500):
+    vltg = j * 0.01
+    outvltg =  vltg * 1023 / 5
+    DACout(int(outvltg))
 
 GPIO.cleanup()
