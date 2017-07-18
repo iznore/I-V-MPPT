@@ -43,7 +43,7 @@ def DACout(value):
     GPIO.output(CLK_PIN, False)
     #DAC Databits output
     for i in range(10):
-        if ((value >> i) & 0x1) == 1:
+        if ((value >> (9 - i)) & 0x1) == 1:
             GPIO.output(SDI_PIN, True)
         else:
             GPIO.output(SDI_PIN, False)
