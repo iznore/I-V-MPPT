@@ -25,7 +25,7 @@ GPIO.setup(LDAC_PIN, GPIO.OUT)
 GPIO.output(CLK_PIN, False)
 
 def DACout(value):
-    print('digital value = ' + str(value))
+    #print('digital value = ' + str(value))
     #LDAC CS start up
     GPIO.output(LDAC_PIN, True)
     GPIO.output(CS_PIN, False)
@@ -69,5 +69,6 @@ while(GPIO.input(SW_PIN) == initstate):
     for j in range(lptime):
         outvltg =  float(j) / lptime * 1023
         DACout(int(outvltg))
+DACout(0)
 
 GPIO.cleanup()
