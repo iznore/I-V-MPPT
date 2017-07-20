@@ -4,16 +4,20 @@
 import time
 import RPi.GPIO as GPIO
 
+#Define numbers
+vms = 200
+ctvms = 13
+
 #GPIO Num setup
 GPIO.setmode(GPIO.BCM)
 CLK_PIN = 4
 SDI_PIN = 17
 CS_PIN = 27
 LDAC_PIN = 22
-led = 5
+SW_PIN = 5
 
 #GPIO setup
-GPIO.setup(led, GPIO.OUT)
+GPIO.setup(SW_PIN, GPIO.IN)
 GPIO.setup(CLK_PIN, GPIO.OUT)
 GPIO.setup(SDI_PIN, GPIO.OUT)
 GPIO.setup(CS_PIN, GPIO.OUT)
@@ -58,9 +62,12 @@ def DACout(value):
     GPIO.output(CS_PIN, True)
     return
 
-for j in range(500):
-    vltg = j * 0.01
-    outvltg =  vltg * 1023 / 5
-    DACout(int(outvltg))
+#main
+initstate = GPIO.input(SW_PIN)
+lptime = vms * ctvms
+while(GPIO.input(SW_PIN) == initstate):
+    for j in range(lptime):
+        outvltg =  float(j) / lptime * 1023
+        DACout(int(outvltg))
 
 GPIO.cleanup()
