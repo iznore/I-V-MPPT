@@ -114,7 +114,7 @@ while(GPIO.input(SW_PIN) == initstate):
     DACout(0)
     for num in range(len(vltg)):
         #print calctime[num] + 's, ' + str(vltg[num]) + " V, " + str(crnt[num])+" mA "
-        write(calctime[num] + ',' + str(vltg[num]) + ',' + str(crnt[num]) + ',\n')
+        f.write(calctime[num] + ',' + str(vltg[num]) + ',' + str(crnt[num]) + ',\n')
     InitDatas()
 
 DACout(0)
