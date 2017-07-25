@@ -38,6 +38,8 @@ time.sleep(1)
 #file setup
 now = datetime.datetime.now()
 f = open(now.strftime("FETIVSCAN_%Y%m%d_%H%M%S.csv"), 'w')
+f.write(now.strftime("%Y%m%d_%H:%M:%S.") + "%04d" % (now.microsecond // 1000) + '\n')
+f.write('Time[h:m:s.ms],Voltage[mV],Current[mA]\n')
 
 #others setup
 initstate = GPIO.input(SW_PIN)
