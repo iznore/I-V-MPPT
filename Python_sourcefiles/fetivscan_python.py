@@ -110,7 +110,7 @@ def DACout(value):
 #main
 while(GPIO.input(SW_PIN) == initstate):
     for j in range(lptime):
-        outvltg =  float(j) / lptime * 819
+        outvltg =  float(j) / lptime * 350
         DACout(int(outvltg))
         CalcIV()
     DACout(0)

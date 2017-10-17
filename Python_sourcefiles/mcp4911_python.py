@@ -67,7 +67,7 @@ initstate = GPIO.input(SW_PIN)
 lptime = vms * ctvms
 while(GPIO.input(SW_PIN) == initstate):
     for j in range(lptime):
-        outvltg =  float(j) / lptime * 1023
+        outvltg =  float(j) / lptime * 350
         DACout(int(outvltg))
 DACout(0)
 
