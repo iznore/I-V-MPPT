@@ -2,22 +2,20 @@ import RPi.GPIO as GPIO
 import time
 import commands
 import datetime
+import smbus
+from smbus import SMBus
 
 vltg = []
 crnt = []
 calctime = []
 
 def GetV():
-    check = commands.getoutput("i2cget -y 1 0x4f 0x02 w")
-    return (int(check[4:6],16)*256+int(check[2:4],16))*1.25/1000
-
+    voltage_data = bus.read_i2c_block_data(0x40,0x02,2)
+    return (voltage_data[0] * 256 + voltage_data[1]) * 1.25 * 0.001
+    
 def GetA():
-    check = commands.getoutput("i2cget -y 1 0x4f 0x01 w")
-    if int(check[4:6],16)<128:
-        return (int(check[4:6],16)*256+int(check[2:4],16))*0.1
-    else:
-        return (int(check[4:6],16)*256+int(check[2:4],16)-256*256)*0.1
-
+    current_data = bus.read_i2c_block_data(0x40,0x01,2)
+    return (current_data[0] * 256 + current_data[1]) * 0.1 * 0.001
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(5,GPIO.OUT)
